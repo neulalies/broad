@@ -1,0 +1,42 @@
+plugins {
+    // Apply the groovy Plugin to add support for Groovy.
+    id 'groovy'
+
+    // Apply the application plugin to add support for building a CLI application in Java.
+    id 'application'
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+    // Use the latest Groovy version for building this library
+    implementation 'org.codehaus.groovy:groovy-all:3.0.10'
+
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:31.0.1-jre'
+
+    // https://github.com/jgritman/httpbuilder
+    implementation 'org.codehaus.groovy.modules.http-builder:http-builder:0.7'
+
+    // Use the awesome Spock testing and specification framework even with Java
+    testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = 'broad.App'
+}
+
+tasks.named('run') {
+    // See https://stackoverflow.com/questions/13172137/console-application-with-java-and-gradle
+    standardInput = System.in
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}

@@ -1,0 +1,23 @@
+DEVLOG
+> capslock to escape
+> doubletap trackpad to drag
+> install sdkman
+> install java sdk 17
+> install gradle 5.7.1
+> http library? httpbuilder (long unmaintained).. use raw methods, no lib?.. groovy-wslite..
+>> httpbuilder works and is fairly widely adopted despite age. used RESTClient for super ease
+
+<> user input - while loop? show routes / route stats / plan trip
+<> note in Readme: API key + where to authorize on MBTA site
+<> notes in writeup for expansion: configurable API key in ext file or as optional input for program on start
+<> tests
+<> optimization: use param fields[] to limit response fields
+<> optimization: cache calls to routes
+
+> issue getting console input working - ended up using Scanner + a tweak to build.gradle
+> Added a static class TripPlanner to handle generating trips
+>> Replicated some logic from the first two questions, could be cleaned up
+
+<> optimization: create system graph up front and reuse for more functions (displaying transfer stops etc)
+
+> Initially planned depth-first but scared of long meandering paths - breadth-first requires keeping more trips in memory at once but isn't actually a performance limitation on this small a map. Actually optimized algorithm gets into much more complicated math so I'm glad that's out of scope!

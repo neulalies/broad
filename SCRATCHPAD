@@ -1,0 +1,80 @@
+SCRATCHPAD
+reasons to filter locally: fairly static total size, unlikely to grow much more than an order of mag, and on a very slow schedule, so keeping payload size down & keeping data fresh are nonissues. Thus could pull and cache values on startup, or daily/weekly/etc, with little downside, and filtering is trivial since not oft repeated. Response filtering will recur as a pattern in Q2, so this would be more consistent.
+
+each stop has moves DOWN (toward 0-indexed terminus) and UP (toward last-indexed terminus). Each transfer stop has additional moves == the ids of other routes with that stop.
+
+(start) - on GREEN
+|_ DOWN
+  |_ (transfer_1_green)
+    |_ RED
+      |_ (transfer_1_red)
+        |_ DOWN
+        |_ UP
+          |_ (end)
+|_ UP
+
+
+Trip:
+a series of Moves: "ride X stops" where X is an integer (negative int is moving down, positive int up) or "transfer to Y" where Y is a route accessible from the current stop
+
+How to find a path?
+
+INIT
+Starting from S0 (origin stop) heading to Sn (destination stop)
+origin routes R0[]]
+origin stop S0
+target routes Rn[]
+target stop Sn
+
+current routes R[] == R0[]
+current stop S == S0
+trip so far T == []
+stops touched Z[] == [S0]
+
+ASSAY(T)
+if Sn == S arrive.
+if Rn[] intersects R[] assay(T + move X(n - ', Rint)).
+
+get transfers Sx[] on this line, minus Z[] // preventing repeats
+for each transfer stop Sx:
+    get Rint = Rx[] of transfer stop intersect R[]
+    new trip T' = T + move Y(x - ', Rint)
+    if assay(T') arrives, return T'.
+abort trip T.
+
+MOVE(d, R)
+get stops on R
+get St // last stop on R in the direction indicated by sign of d (+/-)
+S' = S + d // get stop at new location along R
+Z[] += S[*d] // add stops traversed to set of touched stops
+T[] << "From S, ride R toward St to S' (d stops)"
+S = S'
+
+
+
+        // get destination routes
+        // naive depth-first search prioritizing 1. destination routes 2. current route 3. first available route 4. back 5. next
+        // unit tests
+
+
+
+
+___________________
+Breadth-first assay
+
+trips = [T0] is initial set of trips with T0, current stop/routes = origin, destination stop/routes = destination.
+completeTrip = null
+do
+    trips = trips.collectMany { it.expand() }
+    completeTrip = trips.find { it.arrived }
+while (!completeTrip)
+
+Trip T has current routes, current stop, previous moves, destination stop, destination routes, arrived bool.
+Move M has originId (origin stop id), steps (signed int) and routeId.
+
+    T[] expand()
+        doMoves(getMoves())
+    private T[] doMoves(moves[]) returns a new trip for each move: starting with this T, adds a move to previous moves, changes current stop and current routes, checks arrived.
+    private M[] getMoves() returns the valid moves available from current stop to previously untouched (not present in moves history's destination stops) transfer stations. If on destination route, returns only the final move.
+
+
